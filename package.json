@@ -1,0 +1,31 @@
+{
+  "name": "exo-lexicon",
+  "version": "1.0.0",
+  "description": "A GUI manager for Redis",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guilycst/exo-lexicon.git"
+  },
+  "keywords": [
+    "redis",
+    "key-value",
+    "client",
+    "gui",
+    "desktop",
+    "cross-platform"
+  ],
+  "author": "guilycst",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/guilycst/exo-lexicon/issues"
+  },
+  "homepage": "https://github.com/guilycst/exo-lexicon#readme",
+  "dependencies": {
+    "electron": "^7.1.2"
+  }
+}
