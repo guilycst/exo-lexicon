@@ -22,7 +22,7 @@ app.on('ready', () => {
         }
     });
 
-    mainWindow.loadURL(`file://${__dirname}/app/index.html`);
+    mainWindow.loadURL(`file://${__dirname}/app/views/index.html`);
 });
 
 app.on('window-all-closed', () => {
@@ -33,15 +33,20 @@ let aboutWindow = null;
 ipcMain.on('open-about-window', () => {
     if (!aboutWindow) {
         aboutWindow = new BrowserWindow({
-            width: 300,
-            height: 200,
+            width: 500,
+            height: 400,
             parent: mainWindow,
             modal: true,
-            frame: false
+            frame: false,
+            webPreferences: {
+                preload: `${__dirname}/preload.js`
+            }
         });
 
         aboutWindow.on('closed', () => aboutWindow = null);
     }
 
-    aboutWindow.loadURL(`file://${__dirname}/app/about.html`);
-})
+    aboutWindow.loadURL(`file://${__dirname}/app/views/about.html`);
+});
+
+ipcMain.on('close-about-window', () => aboutWindow.close());
