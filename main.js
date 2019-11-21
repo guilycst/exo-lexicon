@@ -5,24 +5,36 @@ const {
     ipcMain
 } = require('electron');
 
+
+const homedir = require('os').homedir();
+
+const Configuration = require('./app/core/configuration')
+
 let mainWindow = null
 
 app.on('ready', () => {
-    const primaryDisplay = screen.getPrimaryDisplay()
-    const {
-        width,
-        height
-    } = primaryDisplay.workAreaSize;
 
-    mainWindow = new BrowserWindow({
-        width,
-        height,
-        webPreferences: {
-            preload: `${__dirname}/preload.js`
-        }
+    let config = new Configuration(`${homedir}/.elexsrvs`);
+    config.load().then(() => {
+        const primaryDisplay = screen.getPrimaryDisplay()
+        const {
+            width,
+            height
+        } = primaryDisplay.workAreaSize;
+    
+        mainWindow = new BrowserWindow({
+            width,
+            height,
+            webPreferences: {
+                preload: `${__dirname}/preload.js`
+            }
+        });
+    
+        mainWindow.loadURL(`file://${__dirname}/app/views/index.html`);
+        mainWindow.webContents.on('did-finish-load', () => {
+            mainWindow.webContents.send('render-server-list', config.servers);
+        })
     });
-
-    mainWindow.loadURL(`file://${__dirname}/app/views/index.html`);
 });
 
 app.on('window-all-closed', () => {

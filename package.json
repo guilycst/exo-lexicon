@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/guilycst/exo-lexicon#readme",
   "dependencies": {
-    "electron": "^7.1.2"
+    "electron": "^7.1.2",
+    "mustache": "^3.1.0"
   }
 }

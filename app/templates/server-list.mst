@@ -1,0 +1,22 @@
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Host</th>
+            <th scope="col">Port</th>
+            <th scope="col">Available</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#servers}}
+        <tr>
+            <th scope="row">{{name}}</th>
+            <td>{{host}}</td>
+            <td>{{port}}</td>
+            <td>TODO</td>
+        </tr>
+        {{/servers}}
+    </tbody>
+</table>
+
