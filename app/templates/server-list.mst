@@ -14,7 +14,7 @@
             <th scope="row">{{name}}</th>
             <td>{{host}}</td>
             <td>{{port}}</td>
-            <td>TODO</td>
+            <td>{{^available}}❌{{/available}}{{#available}}✔️{{/available}}</td>
         </tr>
         {{/servers}}
     </tbody>

@@ -5,9 +5,8 @@ const {
     ipcMain
 } = require('electron');
 
-
+const redis = require("redis");
 const homedir = require('os').homedir();
-
 const Configuration = require('./app/core/configuration')
 
 let mainWindow = null
@@ -21,7 +20,7 @@ app.on('ready', () => {
             width,
             height
         } = primaryDisplay.workAreaSize;
-    
+
         mainWindow = new BrowserWindow({
             width,
             height,
@@ -29,10 +28,17 @@ app.on('ready', () => {
                 preload: `${__dirname}/preload.js`
             }
         });
-    
+
         mainWindow.loadURL(`file://${__dirname}/app/views/index.html`);
         mainWindow.webContents.on('did-finish-load', () => {
-            mainWindow.webContents.send('render-server-list', config.servers);
+            let healthCheckPromises = config.servers.map(async server => {
+                const healthy = await checkServerHealthy(server);
+                server['available'] = healthy;
+                return server;
+            });
+
+            Promise.all(healthCheckPromises).then(servers => mainWindow.webContents.send('render-server-list', servers))
+
         })
     });
 });
@@ -62,3 +68,31 @@ ipcMain.on('open-about-window', () => {
 });
 
 ipcMain.on('close-about-window', () => aboutWindow.close());
+
+async function checkServerHealthy(server) {
+    let client = null;
+    return new Promise((resolve, reject) => {
+
+        client = redis.createClient({
+            host: server.host,
+            port: server.port
+        });
+
+        client.on('connect', () => {
+            resolve(true);
+        });
+
+        client.on('error', () => {
+            resolve(false);
+        });
+
+    }).finally(() => {
+        try {
+            client && client.quit();
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+
+}
